@@ -7,6 +7,17 @@ services:
     environment:
       MYSQL_DATABASE: blogdb
       MYSQL_ROOT_PASSWORD: root
+  auth-service: # This is your Spring Boot app
+    image: iamtdf/auth-service:v1 # Or your build context if building locally
+    container_name: auth-service
+    ports:
+      - "8080:8080"
+    environment: # These override properties in application.yml within the container
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-blog:3306/blogdb?useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    depends_on:
+      - mysql-blog
   redis-stack:
     image: redis/redis-stack:latest
     container_name: redis-stack-local
